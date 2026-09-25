@@ -1,0 +1,54 @@
+/* src/assets/css/reset.css */
+/* 全局盒模型 */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* html、body 占满全屏，清除默认间距 */
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.5;
+    /* 禁止选中文字（可选，不需要就删掉） */
+    /* user-select: none; */
+}
+
+/* 清除列表默认样式 */
+ul,
+ol {
+    list-style: none;
+}
+
+/* a标签清除下划线、默认蓝色 */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 图片自适应，去除图片下方缝隙 */
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* 按钮清除默认样式 */
+button {
+    border: none;
+    background: none;
+    font-family: inherit;
+}
+
+/* input清除默认边框 */
+input {
+    outline: none;
+    border: none;
+}
