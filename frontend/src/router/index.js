@@ -9,12 +9,13 @@ const router = createRouter({
       name:'Layout',
       component:()=>import('@/layouts/Layouts.vue'),
       children:[
-        {path:'/home',name:'home',component:()=>import('@/views/home.vue')},
-        {path:'/lab',name:'lab',component:()=>import('@/views/Lab.vue')},
-        {path:'/equ',name:'equ',component:()=>import('@/views/Equ.vue')},
-        {path:'/user',name:'user',component:()=>import('@/views/User.vue')}
+        {path:'home',name:'home',component:()=>import('@/views/home.vue')},
+        {path:'lab',name:'lab',component:()=>import('@/views/Lab.vue')},
+        {path:'equ',name:'equ',component:()=>import('@/views/Equ.vue')},
+        {path:'user',name:'user',component:()=>import('@/views/User.vue')}
       ]
-    }
+    },
+    {path:'/login',name:'login',component:()=>import('@/views/login.vue') }
   ],
 })
 
