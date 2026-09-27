@@ -9,6 +9,11 @@ class Config(BaseSettings):
         extra="ignore"   # 忽略.env里多余的变量，防止报错
     )
 
+    # JWT 配置
+    jwt_secret_key: str
+    jwt_expire_time: int
+    jwt_algorithm: str
+
     # 数据库零散配置
     db_host: str
     db_port: int
