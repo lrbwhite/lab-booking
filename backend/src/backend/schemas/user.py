@@ -3,7 +3,6 @@ from pydantic import BaseModel,ConfigDict
 class UserResponse(BaseModel):
     id: int
     username: str
-    password: str
     role: str
     name: str
     email: str

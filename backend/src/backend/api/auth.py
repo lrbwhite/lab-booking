@@ -15,13 +15,14 @@ def login(login_request: LoginRequest, db: Session = Depends(get_db)):
     # 从数据库查询用户
     user = db.query(User).filter(User.username == login_request.username).first()
     if not user or not verify_password(login_request.password, user.password):
-        return {"code":404,"msg":"用户不存在或密码错误"}
+        raise HTTPException(status_code=status.HTTP_404_UNAUTHORIZED,detail="用户不存在或密码错误")
+    
     token = create_jwt_token(user.id)
 
     # 登录成功，返回用户信息
-    return {"code":200,
-    "msg":"登录成功",
-    "data":{"token":token,
-            "user":UserResponse.model_validate(user)
-            }
-    }
+    return Response(
+        code=200,
+        msg="登录成功",
+        data=LoginResponse(token=token,user=UserResponse.model_validate(user))
+    )
+    
