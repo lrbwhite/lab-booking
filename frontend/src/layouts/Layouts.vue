@@ -21,3 +21,13 @@
   </div>
 </template>
 
+<script setup>
+import { logout } from '@/utils/auth'
+import router from '@/router'
+const handleLogout=()=>{
+    logout()
+    router.push('/login')
+}
+</script>
+
+

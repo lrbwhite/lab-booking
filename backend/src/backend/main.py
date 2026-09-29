@@ -6,7 +6,7 @@ from backend.api import router as api_router
 from backend.models.user import User
 from backend.database import engine,Base
 
-from starlette.middleware import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 
 Base.metadata.create_all(bind=engine) 

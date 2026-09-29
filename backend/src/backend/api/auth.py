@@ -1,11 +1,12 @@
-from fastapi import APIRouter,Depends
-from backend.schemas.auth import LoginRequest
+from fastapi import APIRouter,Depends,HTTPException,status
+from backend.schemas.auth import LoginRequest,LoginResponse
 from backend.models.user import User
 from sqlalchemy.orm import Session
 from backend.database import get_db
 from backend.schemas.user import UserResponse
 from backend.utils.password import verify_password
 from backend.utils.jwt import create_jwt_token
+from backend.common.response import Response
 
 
 router = APIRouter(prefix="/auth",tags=["权限验证"])

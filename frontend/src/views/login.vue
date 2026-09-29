@@ -11,7 +11,7 @@
           <el-input size="medium" v-model="form.password" type="password" placeholder="请输入密码" show-password />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" style="width: 100%" @click="login">登录</el-button>
+          <el-button type="primary" style="width: 100%" :loading="loadingValue" @click="loginClick">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -20,9 +20,13 @@
 
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive,ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { login } from '@/api/auth'
 import { ElMessage } from 'element-plus'
+import { useUser } from '@/utils/user'
+
+const {saveLoginData}=useUser()
 
 const router = useRouter()
 
@@ -31,13 +35,17 @@ const form = reactive({
     password: ''
 })
 
-const login = () => {
-    if (!form.username || !form.password) {
-        ElMessage.warning('请输入用户名和密码')
-        return
+const loadingValue=ref(false)
+const loginClick = async () => {
+    loadingValue.value=true
+    try {
+        const res=await login(form)
+        saveLoginData({ token: res.data.token, userInfo: res.data.user })
+        ElMessage.success('登录成功')
+        router.push('/manager/home')
+    } finally {
+        loadingValue.value=false
     }
-    // TODO: 后端登录接口就绪后改为调用接口校验，成功后再跳转
-    router.push('/manager/home')
 }
 </script>
 
