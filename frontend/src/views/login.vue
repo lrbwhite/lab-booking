@@ -3,11 +3,11 @@
     <div class="login-form">
       <h1>实验室预约系统</h1>
       <div class="subtitle" margin-top="12px;">基于langgraph的实验室预约系统</div>
-       <el-form :model="form" label-width="auto" style="max-width: 600px">
-        <el-form-item label="用户名">
+       <el-form ref="formRef" :rules="rules" :model="form" label-width="auto" style="max-width: 600px">
+        <el-form-item prop="username" label="用户名">
           <el-input size="medium" v-model="form.username" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item prop="password" label="密码">
           <el-input size="medium" v-model="form.password" type="password" placeholder="请输入密码" show-password />
         </el-form-item>
         <el-form-item>
@@ -30,13 +30,26 @@ const {saveLoginData}=useUser()
 
 const router = useRouter()
 
+const formRef = ref(null)
+
 const form = reactive({
     username: '',
     password: ''
 })
 
+const rules = reactive({
+    username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+})
+
+
+
 const loadingValue=ref(false)
 const loginClick = async () => {
+    const valid=await formRef.value.validate().catch(()=>false)
+    if (!valid) {
+        return
+    }
     loadingValue.value=true
     try {
         const res=await login(form)
@@ -46,7 +59,7 @@ const loginClick = async () => {
     } finally {
         loadingValue.value=false
     }
-}
+  }
 </script>
 
 <style scoped>

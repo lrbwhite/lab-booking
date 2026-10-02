@@ -1,29 +1,15 @@
-from fastapi import APIRouter,Depends,HTTPException,status
-from backend.schemas.auth import LoginRequest,LoginResponse
-from backend.models.user import User
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from backend.database import get_db
-from backend.schemas.user import UserResponse
-from backend.utils.password import verify_password
-from backend.utils.jwt import create_jwt_token
+
 from backend.common.response import Response
+from backend.database import get_db
+from backend.schemas.auth import LoginRequest, LoginResponse
+from backend.services import auth_service
+
+router = APIRouter(prefix="/auth", tags=["权限验证"])
 
 
-router = APIRouter(prefix="/auth",tags=["权限验证"])
-
-@router.post("/login")
+@router.post("/login", response_model=Response[LoginResponse])
 def login(login_request: LoginRequest, db: Session = Depends(get_db)):
-    # 从数据库查询用户
-    user = db.query(User).filter(User.username == login_request.username).first()
-    if not user or not verify_password(login_request.password, user.password):
-        raise HTTPException(status_code=status.HTTP_404_UNAUTHORIZED,detail="用户不存在或密码错误")
-    
-    token = create_jwt_token(user.id)
-
-    # 登录成功，返回用户信息
-    return Response(
-        code=200,
-        msg="登录成功",
-        data=LoginResponse(token=token,user=UserResponse.model_validate(user))
-    )
-    
+    result = auth_service.login(login_request, db)
+    return Response(code=200, msg="登录成功", data=result)

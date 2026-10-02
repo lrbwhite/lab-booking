@@ -1,6 +1,7 @@
 import datetime
 
 import jwt
+from fastapi import HTTPException, status
 
 from backend.config import config
 
@@ -18,11 +19,19 @@ def create_jwt_token(user_id: int) -> str:
 
 def decode_jwt_token(token: str) -> dict:
     """
-    解码JWT token
+    解码JWT token，失败时抛出 401 异常
     """
     try:
         return jwt.decode(token, config.jwt_secret_key, algorithms=[config.jwt_algorithm])
     except jwt.ExpiredSignatureError:
-        return {"code": 401, "msg": "token过期"}
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="token过期",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     except jwt.InvalidTokenError:
-        return {"code": 401, "msg": "token无效"}
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="token无效",
+            headers={"WWW-Authenticate": "Bearer"},
+        )

@@ -1,15 +1,19 @@
-from typing import Any
+from typing import Any, Generic, TypeVar
+
 from pydantic import BaseModel
 
-class Response(BaseModel):
-    code: int
-    msg: str
-    data: Any = None
+T = TypeVar("T")
+
+
+class Response(BaseModel, Generic[T]):
+    code: int = 200
+    msg: str = "success"
+    data: T | None = None
 
     @classmethod
-    def success(cls,data: Any = None) -> "Response":
-        return cls(code=200,msg="success",data=data)
+    def success(cls, data: Any = None) -> "Response":
+        return cls(code=200, msg="success", data=data)
+
     @classmethod
-    def error(cls,code: int,msg: str) -> "Response":
-        return cls(code=code,msg=msg)
-     
+    def error(cls, code: int, msg: str) -> "Response":
+        return cls(code=code, msg=msg)
