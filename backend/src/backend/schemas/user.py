@@ -10,3 +10,9 @@ class UserResponse(BaseModel):
     avatar: str|None=None
     
     model_config = ConfigDict(from_attributes=True)
+
+class UserUpdater(BaseModel):
+    name: str|None=None
+    email: str|None=None
+    phone: str|None=None
+    avatar: str|None=None

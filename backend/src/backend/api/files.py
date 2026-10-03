@@ -5,6 +5,7 @@ import os
 import shutil
 from backend.config import UPLOAD_DIR, MAX_UPLOAD_SIZE, ALL_ALLOWED_EXTENSIONS
 from backend.common.exceptions import BusinessExceptionException
+from backend.schemas.files import FileResponse
 from backend.common.response import Response
 
 
@@ -33,10 +34,10 @@ def upload_file(file: UploadFile = File(...)):
     with open(upload_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
 
-    return Response.success(data={
-        "original_filename": original_filename,
-        "disk_name": disk_name,
-        "size": file.size,
-        "url": f"/uploads/{disk_name}",
-    })
+    return Response.success(data=FileResponse(
+        original_filename=original_filename,
+        disk_name=disk_name,
+        size=file.size,
+        url=f"/uploads/{disk_name}",
+    ))
 
