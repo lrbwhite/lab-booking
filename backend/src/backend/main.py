@@ -1,7 +1,8 @@
 from fastapi import FastAPI,HTTPException
 from fastapi.exceptions import RequestValidationError
 from backend.api import router as api_router
-
+from fastapi.staticfiles import StaticFiles
+from backend.config import UPLOAD_DIR
 
 from backend.models.user import User
 from backend.database import engine,Base
@@ -33,6 +34,10 @@ app.add_exception_handler(HTTPException,handle_http_exception)
 app.add_exception_handler(RequestValidationError,handle_validation_exception)
 # 注册全局异常处理函数
 app.add_exception_handler(Exception,handle_global_exception)
+
+#挂载静态的文件目录
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR))
+
 
 @app.get("/")
 def read_root():

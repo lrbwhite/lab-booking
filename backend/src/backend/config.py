@@ -1,4 +1,9 @@
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# 项目根目录（backend/），config.py 位于 backend/src/backend/ 下
+BASE_DIR = Path(__file__).resolve().parents[2]
 
 
 class Config(BaseSettings):
@@ -32,3 +37,9 @@ class Config(BaseSettings):
 
 # 全局单例，项目其他地方直接 import 使用
 config = Config()
+
+UPLOAD_DIR = BASE_DIR / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+MAX_UPLOAD_SIZE = 1024 * 1024 * 100  # 100MB
+
+ALL_ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".pdf", ".docx"}
