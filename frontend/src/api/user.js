@@ -4,7 +4,7 @@ import request from '@/utils/request'
 
 export function getUserInfo() {
   return request({
-    url:'/user/info',
+    url:'/user/me',
     method:'get',
   })
 }
@@ -13,7 +13,16 @@ export function getUserInfo() {
 
 export function updateUserUserInfo(data) {
     return request({
-        url:'/user/update',
+        url:'/user/me',
+        method:'put',
+        data,
+    })
+}
+
+/**修改当前用户密码 */
+export function updatePassword(data) {
+    return request({
+        url:'/user/password',
         method:'put',
         data,
     })

@@ -1,5 +1,5 @@
 from backend.models.user import User
-from backend.schemas.user import UserResponse, UserUpdater
+from backend.schemas.user import UserResponse, UserUpdater, PasswordUpdateRequest
 from sqlalchemy.orm import Session
 
 def get_user_info(user: User)->UserResponse:
@@ -11,3 +11,11 @@ def update_user_info(db: Session, user: User, update_data: UserUpdater):
         setattr(user, key, value)
     db.commit()
     return UserResponse.model_validate(user)
+
+def update_password(db: Session, user: User,data: PasswordUpdateRequest):
+    if not verify_password(data.old_password, user.password):
+        raise BusinessException("旧密码错误")
+    if data.new_password == data.old_password:
+        raise BusinessException("新密码不能与旧密码相同")
+    user.password = hash_password(data.new_password)
+    db.commit()
