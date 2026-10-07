@@ -37,3 +37,14 @@ def update_password(
     """更新用户密码"""
     user_services.update_password(db, current_user, data)
     return Response.success()
+
+@router.get("/list")
+def get_user_list(
+        page: int = 1,
+        page_size: int = 10,
+        username: str | None = None,
+        current_user: User = Depends(get_current_user),
+        db: Session = Depends(get_db),
+    ):
+        res=user_services.get_user_page_list(db, page, page_size, username)
+        return Response.success(data=res)

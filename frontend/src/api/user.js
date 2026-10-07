@@ -27,3 +27,12 @@ export function updatePassword(data) {
         data,
     })
 }
+
+/**分页模糊查询用户列表 */
+export function getUserPageList(data) {
+    return request({
+        url:'/user/list',
+        method:'get',
+        params:data,
+    })
+}

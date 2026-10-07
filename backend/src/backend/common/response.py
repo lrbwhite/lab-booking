@@ -17,3 +17,8 @@ class Response(BaseModel, Generic[T]):
     @classmethod
     def error(cls, code: int, msg: str) -> "Response":
         return cls(code=code, msg=msg)
+
+class PageResponse(BaseModel):
+    """分页返回结果"""
+    list: Any=[]
+    total: int=0

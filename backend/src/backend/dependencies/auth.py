@@ -19,3 +19,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
     return user
+
+def get_current_admin(current_user: User = Depends(get_current_user))->User:
+    """判断用户是否为管理员
+    """
+    if current_user.role != "admin":
+        raise BusinessException(msg="用户无权访问", code=403)
+    return current_user
+
