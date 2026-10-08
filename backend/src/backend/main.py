@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine) 
 
-from backend.common.exceptions import (BusinessExceptionException,
+from backend.common.exceptions import (BusinessException,
 handle_business_exception,
 handle_http_exception,
 handle_validation_exception,
@@ -29,7 +29,7 @@ app.add_middleware(
 app.include_router(api_router)
 
 #注册异常处理函数
-app.add_exception_handler(BusinessExceptionException,handle_business_exception)
+app.add_exception_handler(BusinessException,handle_business_exception)
 app.add_exception_handler(HTTPException,handle_http_exception)
 app.add_exception_handler(RequestValidationError,handle_validation_exception)
 # 注册全局异常处理函数

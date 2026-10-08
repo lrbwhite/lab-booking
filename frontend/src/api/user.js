@@ -29,10 +29,38 @@ export function updatePassword(data) {
 }
 
 /**分页模糊查询用户列表 */
-export function getUserPageList(data) {
+export function getUserPageList(params) {
     return request({
         url:'/user/list',
         method:'get',
-        params:data,
+        params,
+    })
+}
+
+
+/**新增用户 */
+export function createUserApi(data) {
+    return request({
+        url:'/user',
+        method:'post',
+        data,
+    })
+
+}
+
+/**更新用户 */
+export function updateUserApi(user_id, data) {
+    return request({
+        url:`/user/${user_id}`,
+        method:'put',
+        data,
+    })
+}
+
+/**删除用户 */
+export function deleteUserApi(user_id) {
+    return request({
+        url:`/user/${user_id}`,
+        method:'delete',
     })
 }

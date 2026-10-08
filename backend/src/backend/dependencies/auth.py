@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from backend.database import get_db
 from backend.models.user import User
 from backend.utils.jwt import decode_jwt_token
+from backend.common.exceptions import BusinessException
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 

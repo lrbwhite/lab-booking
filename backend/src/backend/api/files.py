@@ -4,7 +4,7 @@ import time
 import os
 import shutil
 from backend.config import UPLOAD_DIR, MAX_UPLOAD_SIZE, ALL_ALLOWED_EXTENSIONS
-from backend.common.exceptions import BusinessExceptionException
+from backend.common.exceptions import BusinessException
 from backend.schemas.files import FileResponse
 from backend.common.response import Response
 
@@ -16,16 +16,16 @@ router = APIRouter(prefix="/files",tags=["文件管理"])
 def upload_file(file: UploadFile = File(...)):
     """文件上传接口"""
     if not file.filename:
-        raise BusinessExceptionException(code=400, msg="文件名不能为空")
+        raise BusinessException(code=400, msg="文件名不能为空")
     #原始文件名 用户头像.jpg
     original_filename = os.path.basename(file.filename)
     #文件后缀 .jpg
     ext=Path(original_filename).suffix.lower()
     if ext not in ALL_ALLOWED_EXTENSIONS:
-        raise BusinessExceptionException(code=400, msg=f"文件后缀 {ext} 不被允许")
+        raise BusinessException(code=400, msg=f"文件后缀 {ext} 不被允许")
     #文件大小
     if file.size and file.size > MAX_UPLOAD_SIZE:
-        raise BusinessExceptionException(code=400, msg=f"文件大小不能超过 {MAX_UPLOAD_SIZE//1024//1024} MB")
+        raise BusinessException(code=400, msg=f"文件大小不能超过 {MAX_UPLOAD_SIZE//1024//1024} MB")
     #设置唯一文件名
     disk_name=f"{int(time.time()*1000)}{ext}"
     #文件存储实际路径

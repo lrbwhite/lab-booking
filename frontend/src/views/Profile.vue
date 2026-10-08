@@ -25,9 +25,6 @@
     <el-form-item>
         <el-button type="primary" :loading="submitting" @click="handleSubmit">提交</el-button>
     </el-form-item>
-
-
-
    </el-form>
   </el-card>
  </div>
@@ -61,8 +58,8 @@ const rules = {
 }
 
 const roleLabel = computed(()=>{
-    // 后端 role 存的是中文："管理员"/"学生"，兼容英文码
-    const roleMap = { '管理员':'管理员', '学生':'学生', 'admin':'管理员', 'student':'学生' }
+    // 后端 role 存的是英文码："admin"/"student"
+    const roleMap = { admin:'管理员', student:'学生' }
     return roleMap[form.value.role] || '未知角色'
 })
 

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 
 from backend.common.response import Response
-from backend.dependencies.auth import get_current_user
+from backend.dependencies.auth import get_current_user,get_current_admin
 from backend.models.user import User
 from backend.services import user_services
-from backend.schemas.user import UserUpdater, PasswordUpdateRequest
+from backend.schemas.user import UserCreateRequest, UserUpdater,PasswordUpdateRequest
 from backend.database import get_db
 from sqlalchemy.orm import Session
 
@@ -48,3 +48,31 @@ def get_user_list(
     ):
         res=user_services.get_user_page_list(db, page, page_size, username)
         return Response.success(data=res)
+
+@router.post("")
+def create_user(
+    data:UserCreateRequest,
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    res=user_services.create_user(db, data)
+    return Response.success(data=res)
+
+@router.put("/{user_id}")
+def update_user(
+    user_id: int,
+    data: UserUpdater,
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    res=user_services.update_user(db, user_id, data)
+    return Response.success(data=res)
+
+@router.delete("/{user_id}")
+def delete_user(
+    user_id: int,
+    current_user: User = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    user_services.delete_user(db, user_id, current_user)
+    return Response.success()

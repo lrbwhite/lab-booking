@@ -7,7 +7,7 @@ from backend.common.response import Response
 
 logger = logging.getLogger(__name__)
 
-class BusinessExceptionException(HTTPException):
+class BusinessException(HTTPException):
     """
     业务异常
     """
@@ -16,7 +16,7 @@ class BusinessExceptionException(HTTPException):
         self.code = code
         self.msg = msg
 
-async def handle_business_exception(request: Request,exc: BusinessExceptionException):
+async def handle_business_exception(request: Request,exc: BusinessException):
     """
     处理自定义业务异常
     """
