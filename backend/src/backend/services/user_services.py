@@ -10,7 +10,7 @@ def get_user_info(user: User)->UserResponse:
     return UserResponse.model_validate(user)
 
 def update_user_info(db: Session, user: User, update_data: UserUpdater):
-    user_dict = update_data.model_dump(exclude_none=True)#pydatic 转换为字典
+    user_dict = update_data.model_dump(exclude_none=True,exclude=["role","status"])#pydatic 转换为字典
     for key, value in user_dict.items():
         setattr(user, key, value)
     db.commit()

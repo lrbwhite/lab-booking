@@ -14,7 +14,8 @@ const router = createRouter({
         {path:'lab',name:'lab',component:()=>import('@/views/Lab.vue')},
         {path:'equ',name:'equ',component:()=>import('@/views/Equ.vue')},
         {path:'user',name:'user',component:()=>import('@/views/User.vue')},
-        {path:'profile',name:'profile',component:()=>import('@/views/Profile.vue')}
+        {path:'profile',name:'profile',component:()=>import('@/views/Profile.vue')},
+        {path:'lab',name:'lab',component:()=>import('@/views/Lab.vue')}
       ]
     },
     {path:'/login',name:'login',component:()=>import('@/views/login.vue') }

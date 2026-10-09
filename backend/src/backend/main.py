@@ -5,12 +5,13 @@ from fastapi.staticfiles import StaticFiles
 from backend.config import UPLOAD_DIR
 
 from backend.models.user import User
+from backend.models.lab import Lab
 from backend.database import engine,Base
 
 from fastapi.middleware.cors import CORSMiddleware
 
 
-Base.metadata.create_all(bind=engine) 
+Base.metadata.create_all(bind=engine) #创建数据库表
 
 from backend.common.exceptions import (BusinessException,
 handle_business_exception,
