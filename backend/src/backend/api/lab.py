@@ -17,12 +17,12 @@ router = APIRouter(prefix="/lab", tags=["实验室信息接口"])
 def get_lab_list(
         page: int = 1,
         page_size: int = 10,
-        labname: str | None = None,
+        keywords: str | None = None,
         current_user: Lab = Depends(get_current_admin),
         db: Session = Depends(get_db),
     ):
-        res=lab_services.get_lab_page_list(db, page, page_size, labname)
-        return Response.success(data=res)
+    res=lab_services.get_lab_page_list(db, page, page_size, keywords)
+    return Response.success(data=res)
 
 @router.post("")
 def create_lab(

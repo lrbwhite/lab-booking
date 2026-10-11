@@ -1,8 +1,20 @@
 <template>
   <div class="common-layout">
     <el-container style="min-height: 100vh;">
-      <el-header style="display: flex; border-bottom: 1px solid #ddd;background-color: #fff;">
+      <el-header style="display: flex; align-items: center; border-bottom: 1px solid #ddd;background-color: #fff;">
         <div style="display: flex; align-items:center;font-size: 24px;font-weight: bold;">实验室预约系统</div>
+
+        <el-dropdown style="margin-left: auto;" placement="bottom-end">
+          <el-button> 用户中心 </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handleProfile">用户信息</el-dropdown-item>
+              <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
+              <!-- <el-dropdown-item>The Action 3rd</el-dropdown-item> -->
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
       </el-header>
       <el-container>
         <el-aside width="220px">
@@ -26,6 +38,11 @@ import { logout } from '@/utils/auth'
 import router from '@/router'
 import {useUser} from '@/utils/user'
 const {userInfo}=useUser()
+
+const handleProfile=()=>{
+    router.push('/manager/profile')
+}
+
 const handleLogout=()=>{
     logout()
     router.push('/login')

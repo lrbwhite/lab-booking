@@ -6,11 +6,11 @@ from backend.common.exceptions import BusinessException
 
 
 
-def get_lab_page_list(db: Session, page: int, page_size: int,labname:str|None=None)->PageResponse:
+def get_lab_page_list(db: Session, page: int, page_size: int,keywords:str|None=None)->PageResponse:
     """分页查询实验室"""
     query = db.query(Lab)
-    if labname:
-        query = query.filter(Lab.labname.like(f"%{labname}%"))
+    if keywords:
+        query = query.filter(Lab.name.like(f"%{keywords}%"))
     total = query.count()
     item=(
         query.order_by(Lab.id.desc())

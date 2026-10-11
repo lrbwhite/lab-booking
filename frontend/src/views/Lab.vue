@@ -98,7 +98,7 @@
                 </el-form-item>
             </el-form>
             <template #footer>
-                <el-button>取消</el-button>
+                <el-button @click="dialogVisible=false">取消</el-button>
                 <el-button type="primary" :loading="formLoading" @click="handleSave">确定</el-button>
             </template>
         </el-dialog>
@@ -191,7 +191,7 @@ const handleSave=async()=>{
     if (!valid) return
     formLoading.value=true
     try {
-        const res=form.id? await updateLabApi(form):await createLabApi(form)
+        const res=form.id? await updateLabApi(form.id, form):await createLabApi(form)
         if(res.code===200){
             dialogVisible.value=false
             ElMessage.success('操作成功')
