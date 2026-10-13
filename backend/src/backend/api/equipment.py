@@ -1,0 +1,54 @@
+from fastapi import APIRouter, Depends
+
+from backend.common.response import Response
+from backend.dependencies.auth import get_current_admin
+from backend.models.equipment import Equipment
+from backend.services import equipment_services
+from backend.schemas.equipment import  EquipmentCreateRequest, EquipmentUpdateRequest
+from backend.database import get_db
+from sqlalchemy.orm import Session
+
+
+
+router = APIRouter(prefix="/equipment", tags=["实验室信息接口"])
+
+
+@router.get("/list")
+def get_equipment_list(
+        page: int = 1,
+        page_size: int = 10,
+        keywords: str | None = None,
+        lab_id: int | None = None,
+        current_user: Equipment = Depends(get_current_admin),
+        db: Session = Depends(get_db),
+    ):
+    res=equipment_services.get_equipment_page_list(db, page, page_size, keywords,lab_id)
+    return Response.success(data=res)
+
+@router.post("")
+def create_equipment(
+    data:EquipmentCreateRequest,
+    current_user: Equipment = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    res=equipment_services.create_equipment(db, data)
+    return Response.success(data=res)
+
+@router.put("/{equipment_id}")
+def update_equipment(
+    equipment_id: int,
+    data: EquipmentUpdateRequest,
+    current_user: Equipment = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    res=equipment_services.update_equipment(db, equipment_id, data)
+    return Response.success(data=res)
+
+@router.delete("/{equipment_id}")
+def delete_equipment(
+    equipment_id: int,
+    current_user: Equipment = Depends(get_current_admin),
+    db: Session = Depends(get_db),
+):
+    equipment_services.delete_equipment(db, equipment_id)
+    return Response.success()

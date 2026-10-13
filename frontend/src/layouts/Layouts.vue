@@ -21,7 +21,7 @@
           <el-menu router style="height: 100%" :default-active="$route.path">
             <el-menu-item index="/manager/home">首页</el-menu-item>
             <el-menu-item index="/manager/lab" v-if="userInfo.role==='admin'">实验室预约</el-menu-item>
-            <el-menu-item index="/manager/equ">设备管理</el-menu-item>
+            <el-menu-item index="/manager/equipment" v-if="userInfo.role==='admin'">设备管理</el-menu-item>
             <el-menu-item index="/manager/user" v-if="userInfo.role==='admin'">用户管理</el-menu-item>
           </el-menu>
         </el-aside>

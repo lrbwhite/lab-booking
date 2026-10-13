@@ -12,10 +12,10 @@ const router = createRouter({
       children:[
         {path:'home',name:'home',component:()=>import('@/views/home.vue')},
         {path:'lab',name:'lab',component:()=>import('@/views/Lab.vue')},
-        {path:'equ',name:'equ',component:()=>import('@/views/Equ.vue')},
+        // {path:'equ',name:'equ',component:()=>import('@/views/Equ.vue')},
         {path:'user',name:'user',component:()=>import('@/views/User.vue')},
         {path:'profile',name:'profile',component:()=>import('@/views/Profile.vue')},
-        {path:'lab',name:'lab',component:()=>import('@/views/Lab.vue')}
+        {path:'equipment',name:'equipment',component:()=>import('@/views/Equipment.vue')}
       ]
     },
     {path:'/login',name:'login',component:()=>import('@/views/login.vue') }

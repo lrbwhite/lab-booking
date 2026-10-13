@@ -11,7 +11,7 @@ export function getLabInfo() {
 
 /*修改当前用户信息 */
 
-export function updateLabLabInfo(data) {
+export function updateLabInfo(data) {
     return request({
         url:'/lab/me',
         method:'put',
