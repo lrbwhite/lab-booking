@@ -23,7 +23,7 @@
                     @change="handleSearch"
                     @clear="handleSearch"
                 >
-                    <el-option v-for="item in equipmentOptions" :key="item.id" :value="item.id" :equipmentel="item.name">
+                    <el-option v-for="item in labOptions" :key="item.id" :value="item.id" :label="item.name">
                     </el-option>
                 </el-select>
                 <el-button type="primary" :icon="Search" @click="handleSearch">查询</el-button>
@@ -66,40 +66,31 @@
             ref="formRef" 
             :rules="rules" 
             :model="form" 
-            equipmentel-width="100px" 
+            label-width="100px" 
             style="width: 100%;padding-right: 20px;padding-top: 20px;">
-                <el-form-item equipmentel="名称" prop="name">
-                    <el-input v-model="form.name" placeholder="请输入名称"/>
+                <el-form-item label="所属实验室" prop="lab_id">
+                    <el-select v-model="form.lab_id" placeholder="请选择实验室">
+                        <el-option v-for="item in labOptions" :key="item.id" :value="item.id" :label="item.name">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item equipmentel="描述">
-                    <el-input type="textarea" v-model="form.description" placeholder="请输入描述"/>
+                <el-form-item label="设备名称" prop="name">
+                    <el-input v-model="form.name" placeholder="请输入设备名称"/>
                 </el-form-item>
-                <el-form-item equipmentel="位置">
-                    <el-input type="textarea" v-model="form.location" placeholder="请输入位置"/>
+                <el-form-item label="设备描述" prop="description">
+                    <el-input type="textarea" v-model="form.description" placeholder="请输入设备描述"/>
                 </el-form-item>
-                <el-form-item equipmentel="容量" prop="capacity">
-                    <el-input-number :min="1" v-model="form.capacity" placeholder="请输入容量"/>
+                <el-form-item label="型号规格" prop="spec">
+                    <el-input type="textarea" v-model="form.spec" placeholder="请输入型号规格"/>
                 </el-form-item>
-                <el-form-item equipmentel="开放时间">
-                     <el-time-picker
-                      v-model="form.open_time"
-                      format="HH:mm"
-                      value-format="HH:mm"
-                      placeholder="开放时间"
-                      style="width:140px;margin-right:8px"
-                      />
-                      <el-time-picker
-                      v-model="form.close_time"
-                      format="HH:mm"
-                      value-format="HH:mm"
-                      placeholder="关闭时间"
-                      style="width:140px"
-                      />
+                <el-form-item label="数量" prop="quantity">
+                    <el-input-number :min="1" v-model="form.quantity" placeholder="请输入数量"/>
                 </el-form-item>
-                <el-form-item equipmentel="状态">
+                
+                <el-form-item label="设备状态" prop="status">
                     <el-radio-group v-model="form.status">
-                        <el-radio equipmentel="1">开启</el-radio>
-                        <el-radio equipmentel="0">关闭</el-radio>
+                        <el-radio label="1">正常</el-radio>
+                        <el-radio label="0">维修</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
@@ -114,48 +105,48 @@
 <script setup>
 import { ref,reactive,onMounted } from 'vue'
 import { getEquipmentPageList, updateEquipmentApi, createEquipmentApi, deleteEquipmentApi } from '@/api/equipment'
+import { getLabPageList } from '@/api/lab'
 import { Search,Plus } from '@element-plus/icons-vue'
 import { ElButton ,ElMessage,ElMessageBox} from 'element-plus'
 
 const params=reactive({
     page:1,
-    pageSize:10,
+    page_size:10,
     keywords:'',
     lab_id:null
 })
 
 const loading=ref(false)
 const tableData=ref([])
-const equipmentOptions=ref([])
+const labOptions=ref([])
 const total=ref(0)
 const dialogVisible=ref(false)
 const formRef=ref()
 const form =reactive({
+    id:null,
+    lab_id:null,
     name:'',
     description:'',
-    location:'',
-    capacity:1,
-    open_time:'',
-    close_time:'',
+    spec:'',
+    quantity:1,
     status:'1'
 })
 
 const formLoading=ref(false)
 
 const rules = {
-  name:[{required:true,message:'请输入名称',trigger:'blur'}],
-  capacity:[{required:true,message:'请输入容量',trigger:'blur'}],
+  lab_id:[{required:true,message:'请选择实验室',trigger:'change'}],
+  name:[{required:true,message:'请输入设备名称',trigger:'blur'}],
+  quantity:[{required:true,message:'请输入数量',trigger:'blur'}],
 }
 
 const resetForm=()=>{
     Object.assign(form,{
-        id:'',
+        id:null,
         name:'',
         description:'',
-        location:'',
-        capacity:20, 
-        open_time:'08:00',
-        close_time:'20:00',
+        spec:'',
+        quantity:1, 
         status:'1'
     })
 }
@@ -169,12 +160,11 @@ const handleEdit=(row)=>{
     resetForm()
     Object.assign(form,{
         id:row.id,
+        lab_id:row.lab_id,
         name:row.name,
         description:row.description,
-        location:row.location,
-        capacity:row.capacity,
-        open_time:row.open_time,
-        close_time:row.close_time,
+        spec:row.spec,
+        quantity:row.quantity,  
         status:row.status
     })
     dialogVisible.value=true
@@ -182,7 +172,7 @@ const handleEdit=(row)=>{
 
 //删除实验室
 const handleDelete=(row)=>{
-    ElMessageBox.confirm(`确认删除实验室[${row.name}]?`,'提示',{type:'warning'}).then(
+    ElMessageBox.confirm(`确认删除设备[${row.name}]?`,'提示',{type:'warning'}).then(
         async()=>{
             const res=await deleteEquipmentApi(row.id)
             if(res.code===200){
@@ -193,7 +183,7 @@ const handleDelete=(row)=>{
     ).catch(()=>{})
 }
 
-//保存实验室  
+//保存设备  
 const handleSave=async()=>{
     const valid=await formRef.value.validate().catch(()=>false)
     if (!valid) return
@@ -217,11 +207,7 @@ const handleSave=async()=>{
 const load=async()=>{
     loading.value=true
     try {
-        const res=await getEquipmentPageList({
-            page: params.page,
-            page_size:params.pageSize,
-            keywords:params.keywords
-    })
+        const res=await getEquipmentPageList(params)
     if(res.code===200){
         tableData.value=res.data.list
         total.value=res.data.total
@@ -236,16 +222,16 @@ const handleSearch=async()=>{
     load()
 }
 
-const loadequipments=async()=>{
-    const res=await getEquipmentPageList({page:1,page_size:100})
+const loadLabs=async()=>{
+    const res=await getLabPageList({page:1,page_size:100})
     if(res.code===200){
-        equipmentOptions.value=res.data?.list
+        labOptions.value=res.data?.list
     }
 
 }
 
 onMounted(()=>{
-    loadequipments()
+    loadLabs()
     load()
 })
 </script>
