@@ -223,7 +223,7 @@ const load=async()=>{
     }
 }
 
-const handleSearch=async()=>{
+const handleSearch=()=>{
     params.page=1
     load()
 }

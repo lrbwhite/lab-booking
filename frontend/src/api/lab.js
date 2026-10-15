@@ -37,6 +37,14 @@ export function getLabPageList(params) {
     })
 }
 
+/**根据id查询实验室 */
+export function getLab(lab_id){
+    return request({
+        url:`/lab/${lab_id}`,
+        method:'get',
+    })
+}
+
 
 /**新增用户 */
 export function createLabApi(data) {

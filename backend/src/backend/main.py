@@ -7,6 +7,7 @@ from backend.config import UPLOAD_DIR
 from backend.models.user import User
 from backend.models.lab import Lab
 from backend.models.equipment import Equipment
+from backend.models.reservation import Reservation
 from backend.database import engine,Base
 
 from fastapi.middleware.cors import CORSMiddleware

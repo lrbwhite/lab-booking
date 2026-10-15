@@ -6,11 +6,13 @@ from backend.common.exceptions import BusinessException
 
 
 
-def get_lab_page_list(db: Session, page: int, page_size: int,keywords:str|None=None)->PageResponse:
+def get_lab_page_list(db: Session, page: int, page_size: int,keywords:str|None=None,status:int|None=None):
     """分页查询实验室"""
     query = db.query(Lab)
     if keywords:
         query = query.filter(Lab.name.like(f"%{keywords}%"))
+    if status:
+        query=query.filter(Lab.status==status)
     total = query.count()
     item=(
         query.order_by(Lab.id.desc())
@@ -20,6 +22,11 @@ def get_lab_page_list(db: Session, page: int, page_size: int,keywords:str|None=N
         )
     return PageResponse(list=[LabResponse.model_validate(lab) for lab in item],total=total)
  
+def get_lab(db: Session, lab_id: int):
+    lab = db.query(Lab).filter(Lab.id == lab_id).first()
+    if not lab:
+        raise BusinessException(code=404, msg="实验室不存在")
+    return LabResponse.model_validate(lab)
 
 def create_lab(db: Session, data: LabCreateRequest):
     """创建实验室"""

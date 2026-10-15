@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from backend.common.response import Response
-from backend.dependencies.auth import get_current_admin
+from backend.dependencies.auth import get_current_admin, get_current_user
 from backend.models.lab import Lab
 from backend.services import lab_services
 from backend.schemas.lab import  LabCreateRequest, LabUpdateRequest
@@ -18,10 +18,20 @@ def get_lab_list(
         page: int = 1,
         page_size: int = 10,
         keywords: str | None = None,
-        current_user: Lab = Depends(get_current_admin),
+        status: int | None = None,
+        current_user: Lab = Depends(get_current_user),
         db: Session = Depends(get_db),
     ):
-    res=lab_services.get_lab_page_list(db, page, page_size, keywords)
+    res=lab_services.get_lab_page_list(db, page, page_size, keywords, status)
+    return Response.success(data=res)
+
+@router.get("/{lab_id}")
+def get_lab_list(
+    lab_id:int,
+    current_user: Lab = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    res=lab_services.get_lab(db, lab_id)
     return Response.success(data=res)
 
 @router.post("")
@@ -37,7 +47,7 @@ def create_lab(
 def update_lab(
     lab_id: int,
     data: LabUpdateRequest,
-    current_user: Lab = Depends(get_current_admin),
+    current_user: Lab = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     res=lab_services.update_lab(db, lab_id, data)

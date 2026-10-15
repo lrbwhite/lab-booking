@@ -118,8 +118,8 @@ const params=reactive({
 
 const loading=ref(false)
 const tableData=ref([])
-const labOptions=ref([])
 const total=ref(0)
+const labOptions=ref([])
 const dialogVisible=ref(false)
 const formRef=ref()
 const form =reactive({
@@ -217,7 +217,7 @@ const load=async()=>{
     }
 }
 
-const handleSearch=async()=>{
+const handleSearch=()=>{
     params.page=1
     load()
 }

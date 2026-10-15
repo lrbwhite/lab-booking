@@ -15,7 +15,9 @@ const router = createRouter({
         // {path:'equ',name:'equ',component:()=>import('@/views/Equ.vue')},
         {path:'user',name:'user',component:()=>import('@/views/User.vue')},
         {path:'profile',name:'profile',component:()=>import('@/views/Profile.vue')},
-        {path:'equipment',name:'equipment',component:()=>import('@/views/Equipment.vue')}
+        {path:'equipment',name:'equipment',component:()=>import('@/views/Equipment.vue')},
+        {path:'lablist',name:'lablist',component:()=>import('@/views/LabList.vue')},
+        {path:'lab-equipment',name:'lab-equipment',component:()=>import('@/views/LabEquipment.vue')}
       ]
     },
     {path:'/login',name:'login',component:()=>import('@/views/login.vue') }

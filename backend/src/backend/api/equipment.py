@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
 from backend.common.response import Response
-from backend.dependencies.auth import get_current_admin
+from backend.dependencies.auth import get_current_admin, get_current_user
 from backend.models.equipment import Equipment
 from backend.services import equipment_services
 from backend.schemas.equipment import  EquipmentCreateRequest, EquipmentUpdateRequest
@@ -19,7 +19,7 @@ def get_equipment_list(
         page_size: int = 10,
         keywords: str | None = None,
         lab_id: int | None = None,
-        current_user: Equipment = Depends(get_current_admin),
+        current_user: Equipment = Depends(get_current_user),
         db: Session = Depends(get_db),
     ):
     res=equipment_services.get_equipment_page_list(db, page, page_size, keywords,lab_id)
