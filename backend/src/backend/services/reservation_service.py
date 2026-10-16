@@ -1,13 +1,22 @@
 from sqlalchemy.orm import Session
-
+from datetime import datetime
 from backend.models.user import User
 from backend.models.lab import Lab
+from backend.models.equipment import Equipment
+from backend.models.reservation import Reservation
 from backend.common.exceptions import BusinessException
 from backend.schemas.reservation import ReservationCreateRequest
 
 def create_reservation(db: Session, current_user: User, data: ReservationCreateRequest):
+    now=datetime.now()
+    current_date=now.strftime("%Y-%m-%d")
+    current_time=now.strftime("%H:%M:%S")
+    if data.date < current_date:
+        raise BusinessException(code=400, msg="预约日期不能早于当前日期")
     if data.end_time < data.start_time:
-        raise BusinessException(code=400, msg="预约时间不能早于开始时间")
+        raise BusinessException(code=400, msg="预约结束时间不能早于开始时间")
+    if data.date==current_date and data.start_time < current_time:
+        raise BusinessException(code=400, msg="预约开始时间不能早于当前时间")
     lab = db.query(Lab).filter(Lab.id == data.lab_id).first()
     if not lab:
         raise BusinessException(code=404, msg="实验室不存在")
@@ -21,10 +30,10 @@ def create_reservation(db: Session, current_user: User, data: ReservationCreateR
     #equipment_id不为空，则表示这次是预约实验室设备
     if data.equipment_id:
         equipment=db.query(Equipment).filter(Equipment.id == data.equipment_id).first()
-    if not equipment:
-        raise BusinessException(code=404, msg="实验室设备不存在")
-    if equipment.status!=1:
-        raise BusinessException(code=400, msg="实验室设备正在维修")
+        if not equipment:
+            raise BusinessException(code=404, msg="实验室设备不存在")
+        if equipment.status!=1:
+            raise BusinessException(code=400, msg="实验室设备正在维修")
 
     #实验室或设备是否是可预约状态
     query=db.query(Reservation).filter(

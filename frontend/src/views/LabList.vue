@@ -55,6 +55,11 @@
 
             </div>
         </el-card>
+        <reserve-dialog 
+        v-model:visible="reserveVisible" 
+        :lab-id="currentLab?.id"
+        :lab-name="currentLab?.name"
+        ></reserve-dialog>
     </div>
 </template>
 
@@ -64,6 +69,10 @@ import { getLabPageList } from '@/api/lab'
 import { Search } from '@element-plus/icons-vue'
 import router from '@/router'
 import { ElMessage } from 'element-plus'
+import ReserveDialog from '@/components/ReserveDialog.vue'
+
+const reserveVisible=ref(false)
+const currentLab=ref(null)
 
 const params=reactive({
     page:1,
@@ -79,8 +88,9 @@ const handleViewEquipment=(lab)=>{
     router.push({path: '/manager/lab-equipment', query: {lab_id: lab.id}})
 }
 
-const handleReserve=(item)=>{
-    ElMessage.info(`预约实验室${item.name}`)
+const handleReserve=(lab)=>{
+    currentLab.value=lab
+    reserveVisible.value=true
 }
 
 //加载分页数据

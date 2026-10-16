@@ -9,7 +9,7 @@ class Reservation(Base):
     __tablename__ = "reservations"
     __table_args__ = {"comment": "预约表"}
 
-    user_id:Mapped[int]=mapped_column(ForeignKey("users.id"),comment="预约人",nullable=False)
+    user_id:Mapped[int]=mapped_column(ForeignKey("user.id"),comment="预约人",nullable=False)
     lab_id:Mapped[int]=mapped_column(ForeignKey("labs.id"),comment="实验室",nullable=False)
     equipment_id:Mapped[int]=mapped_column(ForeignKey("equipments.id"),comment="设备",nullable=True)
     date:Mapped[str]=mapped_column(String(10),comment="预约日期",nullable=False)

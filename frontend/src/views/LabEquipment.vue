@@ -61,9 +61,16 @@
                  layout="prev,pager,next,total"
                  @current-change="loadEquipment"
                   />
-             </div>
-        
+             </div>       
         </el-card>
+        <reserve-dialog
+        v-model:visible="reserveVisible"
+        :lab-id="lab.id"
+        :lab-name="lab.name"
+        :equipment-id="currentEquipment.id"
+        :equipment-name="currentEquipment.name"
+        />
+
     </div>
 </template>
 
@@ -76,8 +83,10 @@ import {getEquipmentPageList} from '@/api/equipment'
 
 const route=useRoute()
 const router=useRouter()
-
+const reserveVisible=ref(false)
 const lab=ref(null)
+const currentEquipment=ref(null)
+
 const params={
     page:1,
     page_size:10,
@@ -89,9 +98,12 @@ const tableData=ref([])
 const total=ref(0)
 
 const handleReserveLab=()=>{
+    currentEquipment.value=null
+    reserveVisible.value=true
 }
-
-const handleReserveEquipment=(row)=>{
+const handleReserveEquipment=(equipment)=>{
+    currentEquipment.value=equipment
+    reserveVisible.value=true
 }
 
 const loadLab=async()=>{
