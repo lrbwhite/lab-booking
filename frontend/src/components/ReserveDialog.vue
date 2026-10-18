@@ -22,8 +22,8 @@
                     <el-date-picker
                         v-model="form.date"
                         type="date"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
+                        format="YYYY-MM-DD"
+                        value-format="YYYY-MM-DD"
                         placeholder="请选择日期"
                         style="width: 100%"
                     />
