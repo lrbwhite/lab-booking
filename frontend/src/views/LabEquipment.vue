@@ -65,10 +65,10 @@
         </el-card>
         <reserve-dialog
         v-model:visible="reserveVisible"
-        :lab-id="lab.id"
-        :lab-name="lab.name"
-        :equipment-id="currentEquipment.id"
-        :equipment-name="currentEquipment.name"
+        :lab-id="lab?.id"
+        :lab-name="lab?.name"
+        :equipment-id="currentEquipment?.id"
+        :equipment-name="currentEquipment?.name"
         />
 
     </div>

@@ -19,7 +19,7 @@
                 <el-button type="success" :icon="Plus" @click="handleCreate">新增</el-button>
              </div>
 
-             <el-table :header-cell-style="{background:'#f5f7fa'}" :data="tableData" style="width: 100%" v-model="loading">
+             <el-table :header-cell-style="{background:'#f5f7fa'}" :data="tableData" style="width: 100%" v-loading="loading">
                 <el-table-column prop="name" label="名称" />
                 <el-table-column prop="description" label="描述" />
                 <el-table-column prop="location" label="位置" />

@@ -1,3 +1,5 @@
+from typing import ItemsView
+
 from sqlalchemy.orm import Session
 from datetime import datetime
 from backend.models.user import User
@@ -5,7 +7,45 @@ from backend.models.lab import Lab
 from backend.models.equipment import Equipment
 from backend.models.reservation import Reservation
 from backend.common.exceptions import BusinessException
-from backend.schemas.reservation import ReservationCreateRequest
+from backend.schemas.reservation import ReservationCreateRequest,ReservationResponse
+from backend.common.response import PageResponse
+
+def get_reservation_page_list(
+    db: Session,
+    current_user: User,
+    page: int,
+    page_size: int,
+    status: int=None,
+):
+    """获取预约分页列表"""
+    query=db.query(Reservation)
+    if current_user.role!="admin":
+        query=query.filter(Reservation.user_id==current_user.id)
+    if status is not None:
+        query=query.filter(Reservation.status==status)
+    total=query.count()
+    items=(
+        query.order_by(
+        Reservation.id.desc())
+        .offset((page-1)*page_size)
+        .limit(page_size)
+        .all()
+        )
+    result=[]
+    for item in items:
+        res=ReservationResponse.model_validate(item)
+        res.user_name=item.user.name if item.user else None
+        res.lab_name=item.lab.name if item.lab else None
+        res.equipment_name=item.equipment.name if item.equipment else None
+        res.type="设备" if item.equipment else "实验室"
+        result.append(res)
+    return PageResponse(
+        total=total,
+        list=result
+    )
+
+        
+
 
 def create_reservation(db: Session, current_user: User, data: ReservationCreateRequest):
     now=datetime.now()
@@ -63,8 +103,29 @@ def create_reservation(db: Session, current_user: User, data: ReservationCreateR
     db.add(reservation_model)
     db.commit()
 
+def cancel_reservation(db: Session,current_user: User, id: int):
+    """取消预约"""
+    reservation=db.query(Reservation).filter(Reservation.id == id).first ()
+    if not reservation:
+        raise BusinessException(code=404, msg="预约不存在")
+    if reservation.user_id!=current_user.id:
+        raise BusinessException(code=403, msg="您没有权限取消该预约")
+    if reservation.status!=0:
+        raise BusinessException(code=400, msg="当前预约状态不能取消")
+    reservation.status=3
+    db.commit()
 
-
+def audit_reservation(db: Session, id: int, status: int):
+    """审核预约"""
+    if status not in [1,2]:
+        raise BusinessException(code=400, msg="审核状态错误")
+    item=db.query(Reservation).filter(Reservation.id == id).first ()
+    if not item:
+        raise BusinessException(code=404, msg="预约不存在")
+    if item.status!=0:
+        raise BusinessException(code=400, msg="当前预约状态不能审核")
+    item.status=status
+    db.commit()
 
 
 
