@@ -14,6 +14,11 @@ class Config(BaseSettings):
         extra="ignore"   # 忽略.env里多余的变量，防止报错
     )
 
+    # LLM 配置
+    LLM_API_KEY: str
+    LLM_BASE_URL: str
+    LLM_MODEL: str
+
     # JWT 配置
     jwt_secret_key: str
     jwt_expire_time: int

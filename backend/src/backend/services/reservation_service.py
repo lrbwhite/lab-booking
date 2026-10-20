@@ -1,5 +1,4 @@
-from typing import ItemsView
-
+import asyncio
 from sqlalchemy.orm import Session
 from datetime import datetime
 from backend.models.user import User
@@ -127,7 +126,28 @@ def audit_reservation(db: Session, id: int, status: int):
     item.status=status
     db.commit()
 
+def expire_pending_reservation():
+    """批量删除过期预约"""
+    db=SessionLocal()
+    try:
+        now=datetime.now()
+        today=now.strftime("%Y-%m-%d")
+        time=now.strftime("%H:%M:%S")
+        items=db.query(Reservation).filter(Reservation.status==0).all()
+        changed=False
+        for item in items:
+            if item.date<today or (item.date==today and item.end_time<=time):
+                item.status=3
+                changed=True
+        if changed: 
+                db.commit()
+    finally:
+        db.commit()
 
-
-
+async def run_expire_scan():
+    """一分钟扫描执行业务"""
+    while True:
+        print("开始扫描过期预约")
+        expire_pending_reservation()
+        await asyncio.sleep(60)
     

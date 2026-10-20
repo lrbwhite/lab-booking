@@ -5,6 +5,7 @@ from .files import router as files_router
 from .lab import router as lab_router
 from .equipment import router as equipment_router
 from .reservation import router as reservation_router
+from .ai import router as ai_router
 
 
 
@@ -15,3 +16,4 @@ router.include_router(files_router)
 router.include_router(lab_router)
 router.include_router(equipment_router)
 router.include_router(reservation_router)
+router.include_router(ai_router)

@@ -9,8 +9,10 @@ from backend.models.lab import Lab
 from backend.models.equipment import Equipment
 from backend.models.reservation import Reservation
 from backend.database import engine,Base
-
 from fastapi.middleware.cors import CORSMiddleware
+import asyncio
+from contextlib import asynccontextmanager
+from backend.services import reservation_service
 
 
 Base.metadata.create_all(bind=engine) #创建数据库表
@@ -21,7 +23,16 @@ handle_http_exception,
 handle_validation_exception,
 handle_global_exception)
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """应用启动时执行"""
+    task = asyncio.create_task(reservation_service.run_expire_scan())
+    yield
+    task.cancel()
+
+
+app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], #允许所有来源
