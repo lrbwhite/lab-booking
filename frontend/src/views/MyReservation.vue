@@ -15,16 +15,16 @@
                     @change="handleSearch"
                     @clear="handleSearch"
                 >
-                    <el-option :value="0" :label="待审核" />
-                    <el-option :value="1" :label="已通过" />
-                    <el-option :value="2" :label="已拒绝" />
-                    <el-option :value="3" :label="已取消" />
+                    <el-option :value="0" label="待审核" />
+                    <el-option :value="1" label="已通过" />
+                    <el-option :value="2" label="已拒绝" />
+                    <el-option :value="3" label="已取消" />
                 </el-select>
              </div>
              <el-table :header-cell-style="{background:'#f5f7fa'}" :data="tableData" style="width: 100%" v-loading="loading">
                 <el-table-column prop="lab_name" label="实验室" />
                 <el-table-column label="预约类型" >
-                    <template #default="row">
+                    <template #default="{row}">
                         <el-tag :type="row.type=='实验室'?'success':'primary'">{{row.type}}</el-tag>
                     </template>
                 </el-table-column>
@@ -41,12 +41,12 @@
                 </el-table-column>
                 <el-table-column prop="remark" label="备注" />
                 <el-table-column label="预约状态" width="100">
-                    <template #default="row">
+                    <template #default="{row}">
                         <el-tag :type="statusType(row.status)">{{statusText(row.status)}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="100">
-                    <template #default="row">
+                    <template #default="{row}">
                         <el-button type="danger" text bg v-if="row.status==0" @click="handleCancel(row)">
                             取消</el-button>
                     </template>
