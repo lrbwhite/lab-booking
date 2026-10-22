@@ -20,6 +20,7 @@
         <el-aside width="220px">
           <el-menu router :default-active="router.currentRoute.value.path" style="height: 100%" default-active="/manager/home">
             <el-menu-item index="/manager/home">首页</el-menu-item>
+            <el-menu-item index="/manager/ai-chat">AI助手</el-menu-item>
             <el-menu-item index="/manager/lablist" v-if="userInfo.role==='student'">实验室列表</el-menu-item>
             <el-menu-item index="/manager/my-reservation" v-if="userInfo.role==='student'">我的预约</el-menu-item>
             <el-menu-item index="/manager/lab" v-if="userInfo.role==='admin'">实验室管理</el-menu-item>

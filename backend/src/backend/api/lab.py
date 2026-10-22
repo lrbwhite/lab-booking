@@ -26,7 +26,7 @@ def get_lab_list(
     return Response.success(data=res)
 
 @router.get("/{lab_id}")
-def get_lab_list(
+def get_lab (
     lab_id:int,
     current_user: Lab = Depends(get_current_user),
     db: Session = Depends(get_db),

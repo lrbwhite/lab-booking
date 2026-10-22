@@ -19,7 +19,8 @@ const router = createRouter({
         {path:'lablist',name:'lablist',component:()=>import('@/views/LabList.vue')},
         {path:'lab-equipment',name:'lab-equipment',component:()=>import('@/views/LabEquipment.vue')},
         {path:'my-reservation',name:'MyReservation',component:()=>import('@/views/MyReservation.vue')},
-        {path:'audit-reservation',name:'AuditReservation',component:()=>import('@/views/AuditReservation.vue')}
+        {path:'audit-reservation',name:'AuditReservation',component:()=>import('@/views/AuditReservation.vue')},
+        {path:'ai-chat',name:'AIChat',component:()=>import('@/views/AIChat.vue')}
       ]
     },
     {path:'/login',name:'login',component:()=>import('@/views/login.vue') }

@@ -1,6 +1,11 @@
+import logging
+
 from backend.config import config
 from backend.common.exceptions import BusinessException
 from openai import OpenAI
+from backend.schemas.aichat import ChatRequest
+
+logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = """你是智能实验室预约系统的助手，回答要简洁。
 你可以介绍本系统的预约流程：
@@ -16,7 +21,7 @@ SYSTEM_PROMPT = """你是智能实验室预约系统的助手，回答要简洁�
 def get_client():
     """获取OpenAI客户端"""
     if not config.LLM_API_KEY:
-        raise BusinessException(code=400,msg="请请配置LLM_API_KEY")
+        raise BusinessException(code=400,msg="请配置LLM_API_KEY")
     return OpenAI(
         api_key=config.LLM_API_KEY,
         base_url=config.LLM_BASE_URL,
@@ -38,7 +43,7 @@ def chat(request: ChatRequest):
     client = get_client()
     try:
         res= client.chat.completions.create(
-                model=Config.LLM_MODEL,
+                model=config.LLM_MODEL,
             messages=[
                 {"role":"system","content":SYSTEM_PROMPT},
                 *history
@@ -48,6 +53,9 @@ def chat(request: ChatRequest):
         if not message or not message.strip():
             raise BusinessException(code=400,msg="LLM返回空内容")
         return message
+    except BusinessException:
+        raise
     except Exception as e:
-        raise BusinessException(code=400,msg="请调用LLM失败")
+        logger.exception("调用LLM失败: %s", e)
+        raise BusinessException(code=500, msg="调用LLM失败")
 
