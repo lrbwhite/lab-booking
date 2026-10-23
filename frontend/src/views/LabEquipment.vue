@@ -41,8 +41,8 @@
                 <el-table-column prop="quantity" label="数量" />
                 <el-table-column prop="status" label="状态" width="100" >
                     <template #default="{row}">
-                        <el-tag :type="row.status==='1'?'success':'danger'">
-                        {{row.status==='1'?'正常':'维修'}}
+                        <el-tag :type="row.status===1?'success':'danger'">
+                        {{row.status===1?'正常':'维修'}}
                         </el-tag>
                     </template>
                 </el-table-column>
