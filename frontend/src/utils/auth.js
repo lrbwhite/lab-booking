@@ -17,8 +17,13 @@ export function removeToken() {
 }
 
 export function getUserInfo() {
-    const str= localStorage.getItem(USER_KEY)
-    return str ? JSON.parse(str) : null
+    try {
+        const str= localStorage.getItem(USER_KEY)
+        return str ? JSON.parse(str) : null
+    } catch (e) {
+        localStorage.removeItem(USER_KEY)
+        return null
+    }
 }
 
 export function setUserInfo(userInfo) {

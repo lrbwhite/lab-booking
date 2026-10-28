@@ -27,12 +27,13 @@
                         padding:'10px 12px',
                         borderRadius:'8px',
                         backgroundColor:item.role==='user'?'#409eff':'#fff',
-                        color:item.role==='user'?'#fff':'#333',
+                        color:item.status&&!item.content?'#999':(item.role==='user'?'#fff':'#333'),
+                        fontStyle:item.status&&!item.content?'italic':'normal',
                         whiteSpace:'pre-wrap',
                         lineHeight:'1.6',
                         boxShadow:'0 1px 2px rgba(0,0,0,0.06)'
                     }">
-                        {{item.content}}
+                        {{item.content||item.status}}
                     </div>
                 </div>
              </div>
@@ -51,9 +52,8 @@
 </template>
 
 <script setup>
-import { valueEquals } from 'element-plus';
-import {ref,reactive,nextTick,onMounted} from 'vue'
-import { chatapi } from '@/api/ai'
+import {ref,reactive,nextTick,onMounted,onBeforeUnmount} from 'vue'
+import { chatStreamApi } from '@/api/ai'
 
 const messages = ref([
     {
@@ -63,6 +63,8 @@ const messages = ref([
 ])
 
 const loading=ref(false)
+
+let controller=null
 
 const input=ref('')
 
@@ -75,6 +77,10 @@ const scrollToBottom = () => {
   })
 }
 
+onBeforeUnmount(() => {
+    if (controller) controller.abort()
+})
+
 const handleSend=async()=>{
     const text=input.value.trim()
     if(!text||loading.value) return
@@ -85,19 +91,33 @@ const handleSend=async()=>{
     input.value=''
     loading.value=true
     scrollToBottom()
+    const history=messages.value
+        .filter((item)=>item.role==='user'||item.role==='assistant')
+        .map((item)=>({role:item.role,content:item.content}))
+    const reply=reactive({role:'assistant',content:'',status:''})
+    messages.value.push(reply)
+    controller=new AbortController()
     try {
-        const history=messages.value.filter((item)=>item.role==='user'||item.role==='assistant')
-        const data={message:history}
-        console.log(data)
-        const res=await chatapi(data)
-        if(res.code===200){
-            messages.value.push(res.data)
-            scrollToBottom()
+        await chatStreamApi({message:history},{
+            onChunk:(chunk)=>{
+                reply.status=''
+                reply.content+=chunk
+                scrollToBottom()
+            },
+            onStatus:(text)=>{
+                reply.status=text
+                scrollToBottom()
+            }
+        },controller.signal)
+    } catch(e) {
+        if(e.name!=='AbortError'&&!reply.content){
+            reply.status=''
+            reply.content='抱歉，服务暂时不可用，请稍后再试。'
         }
+    } finally {
+        controller=null
+        loading.value=false
     }
-        finally{
-            loading.value=false
-        }
 }
 
 </script>

@@ -162,3 +162,10 @@ TOOL_REGISTRY = {
     "list_lab_equipments": list_lab_equipments,
     "get_my_reservations": get_my_reservations,
 }
+
+# 工具执行期间返回给前端的提示文案，避免工具调用阶段界面空白
+TOOL_STATUS_TEXT = {
+    "list_open_labs": "正在查询开放中的实验室…",
+    "list_lab_equipments": "正在查询实验室设备…",
+    "get_my_reservations": "正在查询你的预约记录…",
+}

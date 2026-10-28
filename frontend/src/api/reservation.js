@@ -9,7 +9,7 @@ export function createReservationApi(data) {
 }
 
 
-export function getReservationPageListApi(params) {
+export function getReservationPageList(params) {
     return request({
         url: "/reservation/list",
         method: "get",

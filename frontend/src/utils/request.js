@@ -53,7 +53,7 @@ service.interceptors.response.use(
 }
     else {
         //后端没启动，网络异常了
-        ElMessage.error('后端没启动，网络异常了')
+        ElMessage.error('网络异常，请检查服务或网络')
     }
     return Promise.reject(error)
 }

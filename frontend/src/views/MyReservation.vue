@@ -68,7 +68,7 @@
 
 <script setup>
 import { onMounted, ref, reactive } from 'vue'
-import { getReservationPageListApi,cancelReservationApi } from '@/api/reservation'
+import { getReservationPageList,cancelReservationApi } from '@/api/reservation'
 import { ElMessage,ElMessageBox } from 'element-plus'
 
 const statusType=(status)=>{
@@ -90,7 +90,7 @@ const total=ref(0)
 const load =async ()=>{
     loading.value=true
     try{
-        const res=await getReservationPageListApi(params)
+        const res=await getReservationPageList(params)
         if(res.code==200){
             tableData.value=res.data?.list
             total.value=res.total?.total
